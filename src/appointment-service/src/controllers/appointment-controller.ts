@@ -9,36 +9,42 @@ const {
 } = require("../services/appointment-service");
 import { Request, Response } from "express";
 
-export const getById = asyncHandler((req: Request, res: Response) => {
-  const appointments = get(req.params.id);
+export const getById = asyncHandler(async (req: Request, res: Response) => {
+  const appointments = await get(req.params.id);
   if (!appointments)
     return res.status(404).json({ error: "Appointments not found" });
   return res.status(200).json(appointments);
 });
 
-export const getBySender = asyncHandler((req: Request, res: Response) => {
-  const appointments = getBySenderId(req.params.senderId);
+export const getBySender = asyncHandler(async (req: Request, res: Response) => {
+  const appointments = await getBySenderId(req.params.senderId);
   if (!appointments)
     return res.status(404).json({ error: "Appointments not found" });
   return res.status(200).json(appointments);
 });
 
-export const getByReceiver = asyncHandler((req: Request, res: Response) => {
-  const appointments = getByReceiverId(req.params.receiverId);
-  if (!appointments)
-    return res.status(404).json({ error: "Appointments not found" });
-  return res.status(200).json(appointments);
-});
-
-export const createAppointment = asyncHandler((req: Request, res: Response) =>
-  res.status(201).json(create(req.body.appointment))
+export const getByReceiver = asyncHandler(
+  async (req: Request, res: Response) => {
+    const appointments = await getByReceiverId(req.params.receiverId);
+    if (!appointments)
+      return res.status(404).json({ error: "Appointments not found" });
+    return res.status(200).json(appointments);
+  }
 );
 
-export const updateAppointment = asyncHandler((req: Request, res: Response) =>
-  res.status(200).json(update(req.body.appointment))
+export const createAppointment = asyncHandler(
+  async (req: Request, res: Response) =>
+    await res.status(201).json(create(req.body.appointment))
 );
 
-export const deleteAppointment = asyncHandler((req: Request, res: Response) => {
-  remove(req.params.id);
-  return res.status(204);
-});
+export const updateAppointment = asyncHandler(
+  async (req: Request, res: Response) =>
+    await res.status(200).json(update(req.body.appointment))
+);
+
+export const deleteAppointment = asyncHandler(
+  async (req: Request, res: Response) => {
+    await remove(req.params.id);
+    return res.status(204);
+  }
+);

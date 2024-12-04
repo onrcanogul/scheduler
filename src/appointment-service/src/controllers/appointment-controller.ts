@@ -34,17 +34,17 @@ export const getByReceiver = asyncHandler(
 
 export const createAppointment = asyncHandler(
   async (req: Request, res: Response) =>
-    await res.status(201).json(create(req.body.appointment))
+    await res.status(201).json(create(req.body))
 );
 
 export const updateAppointment = asyncHandler(
   async (req: Request, res: Response) =>
-    await res.status(200).json(update(req.body.appointment))
+    await res.status(200).json(update(req.body))
 );
 
 export const deleteAppointment = asyncHandler(
   async (req: Request, res: Response) => {
     await remove(req.params.id);
-    return res.status(204);
+    return res.status(204).json({ message: "deleted" });
   }
 );

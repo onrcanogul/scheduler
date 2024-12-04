@@ -34,8 +34,9 @@ export const getByUser = async (userId: number): Promise<Appointment[]> => {
 export const create = async (
   appointment: Appointment
 ): Promise<Appointment> => {
+  console.log(appointment);
   const query =
-    "INSERT INTO Appointments (sender_id, receiver_id, target_date, location, status, priority, deadline) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *";
+    "INSERT INTO appointments (sender_id, receiver_id, target_date, location, status, priority, deadline) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *";
   const values = [
     appointment.sender_id,
     appointment.receiver_id,
@@ -69,9 +70,10 @@ export const update = async (
   return result.rows[0];
 };
 
-export const remove = async (id: number): Promise<void> => {
-  const entity = get(id);
+export const remove = async (id: number) => {
+  const entity = await get(id);
+  console.log(entity);
   if (!entity) return null;
   const query = "DELETE FROM Appointments WHERE id = $1";
-  await pool.query(query, [id]);
+  return await pool.query(query, [id]);
 };

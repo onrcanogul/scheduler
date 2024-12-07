@@ -1,3 +1,4 @@
+require("../../opentelemetry-service/src/tracer");
 const app = require("./app").default;
 
 const PORT = 3000;

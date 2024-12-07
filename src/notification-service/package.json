@@ -10,6 +10,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "kafkajs": "^2.2.4",
     "nodemailer": "^6.9.16"
   }
 }

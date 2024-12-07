@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "express": "^4.21.1",
+    "kafkajs": "^2.2.4",
     "pg": "^8.13.1"
   }
 }

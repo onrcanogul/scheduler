@@ -1,4 +1,5 @@
 import { Appointment } from "../models/appointment-model";
+const { publistEvent } = require("../kafka/kafkaProducer");
 
 const pool = require("../repository/index");
 
@@ -47,6 +48,10 @@ export const create = async (
     appointment.deadline,
   ];
   const result = await pool.query(query, values);
+  await publistEvent("appointments", {
+    action: "CREATE",
+    data: result.rows[0],
+  });
   return result.rows[0];
 };
 
@@ -67,6 +72,10 @@ export const update = async (
     appointment.deadline,
   ];
   const result = await pool.query(query, values);
+  await publistEvent("appointments", {
+    action: "UPDATE",
+    data: result.rows[0],
+  });
   return result.rows[0];
 };
 
@@ -75,5 +84,9 @@ export const remove = async (id: number) => {
   console.log(entity);
   if (!entity) return null;
   const query = "DELETE FROM Appointments WHERE id = $1";
+  await publistEvent("appointments", {
+    action: "DELETE",
+    data: id,
+  });
   return await pool.query(query, [id]);
 };

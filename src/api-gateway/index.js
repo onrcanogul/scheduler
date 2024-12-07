@@ -3,7 +3,9 @@ const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const { createProxyMiddleware } = require("http-proxy-middleware");
+const authMiddleware = require("./authMiddleware");
 
+const PORT = 5000;
 const app = express();
 
 app.use(cors());
@@ -32,6 +34,26 @@ const services = [
         authRequired: true
     }
 ];
+
+services.forEach((service) => {
+    const proxyMiddleware = createProxyMiddleware({
+        target: service.target,
+        changeOrigin: true,
+        pathRewrite: {
+            [`^${service.route}`]: '',
+        },
+    });
+
+    // Middleware zinciri: Eğer auth gerekliyse authMiddleware eklenir
+    app.use(service.route, authMiddleware(service), proxyMiddleware);
+});
+
+
+app.listen(PORT, () => {
+    console.log(`API Gateway running on port ${PORT}`);
+});
+
+
 
 //todo auth middleware
 

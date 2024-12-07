@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcyrpt = require("bcrypt");
 const { createUser, findUserByEmail } = require("../services/user-service");
-const { asyncHandler } = require("../helpers/async-hander");
+const { asyncHandler } = require("../../../helpers/async-hander");
 const { User } = require("../models/user.model");
 
 import { Request, Response } from "express"; // Tipler için import
@@ -23,3 +23,21 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
   });
   res.json({ token });
 });
+
+export const validateToken = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { token } = req.body;
+    if (!token)
+      return res
+        .status(400)
+        .json({ isValid: false, message: "Token is required" });
+    try {
+      const decoded = jwt.verify(token, SECRET_KEY);
+      return res.status(200).json({ isValid: true, userId: decoded.id });
+    } catch (error) {
+      return res
+        .status(401)
+        .json({ isValid: false, message: "Invalid or expired token" });
+    }
+  }
+);
